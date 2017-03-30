@@ -35,6 +35,7 @@ Please contribute if you have an environment to test these in!
 
 ## EXAMPLE OUTPUT
 
+```
 0 073890cb00000000 storage_pools=1|fault_sets=0|sds_nodes=5|volumes=65|bytes_available=532480000000 PD has 1 storage pools, 0 Fault Sets, 5 SDS nodes, 65 volumes and 532480000000 Bytes available for volume allocation
 0 073890cb00000000rsm - MDM restricted SDC mode enabled
 0 073890cb00000000nj sds_nodes_joined=5 PD has 5 SDS nodes Joined
@@ -128,3 +129,4 @@ Please contribute if you have an environment to test these in!
 0 64fb563b0000000e connected=1|approved=1|read_iop_second=0|write_iop_second=55|read_bytes_second=0|write_bytes_second=55 SDC Read 0 IOPS, 0 Bytes/s; Write 55 IOPS, 55 Bytes/s (Connected, Approved: 1, Name: dev-swarm04, IP: 224.36.60.91)
 0 64fb563c0000000f connected=1|approved=1|read_iop_second=0|write_iop_second=0|read_bytes_second=0|write_bytes_second=0 SDC Read 0 IOPS, 0 Bytes/s; Write 0 IOPS, 0 Bytes/s (Connected, Approved: 1, Name: dev-swarm06, IP: 224.36.60.79)
 0 64fb7d4a00000010 connected=1|approved=1|read_iop_second=0|write_iop_second=58|read_bytes_second=0|write_bytes_second=58 SDC Read 0 IOPS, 0 Bytes/s; Write 58 IOPS, 58 Bytes/s (Connected, Approved: 1, Name: dev-swarm05, IP: 224.36.60.81)
+```
