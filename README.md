@@ -2,7 +2,7 @@
 
 ### A check script for ScaleIO that outputs in check_mk / nagios format
 
-The scripts will hunt through a list of servers to find the current primary MDM, on which "scli" commands will be executed and the output parsed and formatted into nagios/check_mk format. This includes overall status of the cluster, SDS health and usage, including block device errors, SDC attachment and bandwidth usage.
+The script will hunt through a list of servers to find the current primary MDM, on which "scli" commands will be executed and the output parsed and formatted into nagios/check_mk format. This includes overall status of the cluster, SDS health and usage, including block device errors, SDC attachment and bandwidth usage.
 
 ## Requirements:
 
