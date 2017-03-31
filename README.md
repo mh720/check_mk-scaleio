@@ -30,7 +30,9 @@ Generally this script is useful to be run by the check_mk agent, typically liste
 ## TODO
 
 support for more than one PD
+
 support for fault-sets
+
 Please contribute if you have an environment to test these in!
 
 ## EXAMPLE OUTPUT
