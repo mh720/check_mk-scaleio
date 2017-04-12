@@ -12,11 +12,11 @@ This script must be executed from a host that can "ssh" to all ScaleIO MDM hosts
 
 Older (< 1.2.6) check_mk:
 
-mv check_scaleio /usr/lib/check_mk_agent/local
+mv check_scaleio.sh /usr/lib/check_mk_agent/local
 
 Newer check_mk:
 
-mv check_scaleio /usr/share/check_mk_agent/local
+mv check_scaleio.sh /usr/share/check_mk_agent/local
 
 
 You will need to edit the script to change the hostnames of your scaleIO MDMs
