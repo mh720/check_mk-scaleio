@@ -1,17 +1,17 @@
 #/bin/bash
 
 SCALEIO_SERVERS="scaleio1.example.com scaleio2.example.com scaleio3.example.com"
-SCALEIO_PW="SCALEIO_ADMIN_PASSWORD"
-
-
-##################################
+SCALEIO_ADMIN_PW="SCALEIO_admin_PASSWORD"
+PD_WARN_SPACE=300000000000
+PD_CRIT_SPACE=100000000000
 TMPFILE=/tmp/tmp.services.nagiosdata.scaleio
 OUTFILE=/tmp/services.nagiosdata.scaleio
-PRIMARY_SERVER=
+
 
 #Find out which server is our current primary MDM
+PRIMARY_SERVER=
 for SERVER in ${SCALEIO_SERVERS}; do
-  OUTPUT=$(ssh ${SERVER} "scli --login --username admin --password ${SCALEIO_PW} 2>/dev/null | grep 'Logged in'") 
+  OUTPUT=$(ssh ${SERVER} "scli --login --username admin --password ${SCALEIO_ADMIN_PW} 2>/dev/null | grep 'Logged in'") 
   #Error: Failed to connect
   #Logged in. User role is SuperUser. System ID is 78221ddb0dcff2f5
   if [ "$?" == "0" ]; then
@@ -137,7 +137,12 @@ if [ "${PRIMARY_SERVER}" != "" ]; then
     exit
   fi
 
-  echo "${QUERY_ALL_OUTPUT}" | awk -v PDID=${PD_ID} 'BEGIN {FS=" "} {if ($1=="Protection" && $2=="Domain") {printf "0 %s storage_pools=%s|fault_sets=%s|sds_nodes=%s|volumes=%s|bytes_available=%s PD has %s storage pools, %s Fault Sets, %s SDS nodes, %s volumes and %s %s available for volume allocation\n",PDID,$7,$10,$13,$16,$21,$7,$10,$13,$16,$21,$22} }' >> ${TMPFILE}
+  BYTES_AVAIL=$(echo "${QUERY_ALL_OUTPUT}" | awk 'BEGIN {FS=" "} {if ($1=="Protection" && $2=="Domain") {printf "%s", $21} }')
+
+  if [ ${BYTES_AVAIL} -lt ${PD_CRIT_SPACE} ]; then PD_STATUS=2
+  elif [ ${BYTES_AVAIL} -lt ${PD_WARN_SPACE} ]; then PD_STATUS=1; else PD_STATUS=0;fi
+
+  echo "${QUERY_ALL_OUTPUT}" | awk -v PDID=${PD_ID} -v PDSTATUS=${PD_STATUS} -v PDWARN=${PD_WARN_SPACE} -v PDCRIT=${PD_CRIT_SPACE} 'BEGIN {FS=" "} {if ($1=="Protection" && $2=="Domain") {printf "%s %s storage_pools=%s|fault_sets=%s|sds_nodes=%s|volumes=%s|bytes_available=%s;%s;%s;; PD has %s storage pools, %s Fault Sets, %s SDS nodes, %s volumes and %s %s available for volume allocation\n",PDSTATUS,PDID,$7,$10,$13,$16,$21,PDWARN,PDCRIT,$7,$10,$13,$16,$21,$22} }' >> ${TMPFILE}
 
 #    1   2          3   4     5
 #    MDM restricted SDC mode: enabled
@@ -332,7 +337,7 @@ if [ "${PRIMARY_SERVER}" != "" ]; then
 # TOOD: support for fault-sets
 #################################################################
 
-  mv -f ${TMPFILE} ${OUTFILE}
+  mv -f ${TMPFILE} ${OUTFILE} 2>>/dev/null
   cat ${OUTFILE}
 
 else
